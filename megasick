@@ -1,0 +1,12 @@
+#!/bin/sh
+
+NETWORK_HOME='/u05/$(whoami)'
+for ENV in d s
+do
+	for APP in abra gamayun krabby psyduck simurgh swinub watchdog yandexws zubat
+	do
+		echo ==== $APP.$ENV
+		ssh-keygen -f "/home/dsidorenko/.ssh/known_hosts" -R appkrabby.d.dev.agent.ru
+		ssh app$APP.$ENV.dev.agent.ru "rvm_path=$NETWORK_HOME/.rvm/;source $NETWORK_HOME/.rvm/scripts/rvm && homesick pull castle -q && homesick symlink castle -f && echo Finished"
+	done
+done

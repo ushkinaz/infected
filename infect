@@ -1,0 +1,17 @@
+#!/bin/bash
+# Infects given host with personalized settings
+
+if [[ "$1" != "" ]]; then
+	hosts="$1"
+else
+	hosts=$(awk -F "," '{print $1}' ~/.ssh/known_hosts | grep 'dev.agent.ru')
+fi
+
+
+SCRIPT=$(cat virus)
+
+for host in $hosts
+do
+	echo "== infecting $host"
+	ssh $host "$SCRIPT"
+done

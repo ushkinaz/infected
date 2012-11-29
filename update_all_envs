@@ -1,0 +1,13 @@
+#!/bin/sh
+
+
+hosts=$(awk -F "," '{print $1}' ~/.ssh/known_hosts  | grep 'dev.agent.ru' | grep -v 'logger.dev' | grep -v 'vs-as')
+
+for host in $hosts
+do
+	echo ==== $host
+		ssh $host "cd ~/.homesick/repos/castle/ && git reset --hard HEAD && git clean -dff && git pull --ff-only"
+	    ssh $host "cd ~/.homesick/repos/castle-vim7/ && git reset --hard HEAD && git clean -dff && git pull --ff-only"
+	    # ssh $host "rvm info 2>/dev/null || curl -L https://get.rvm.io | bash -s stable --ruby --gems=homesick,cheat"
+		# ssh app$APP.$ENV.dev.agent.ru 'echo "$(hostname);0;$(date +%s)">> /u05/$(whoami)/visited_hosts.db'
+done
