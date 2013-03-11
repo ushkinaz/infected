@@ -1,12 +1,12 @@
 #!/bin/bash
-# Infects given host with personalized settings
+# Infects given host with personalized settings.
+# infect with no arguments infects all hosts in .ssh/known_hosts.
 
 if [[ "$1" != "" ]]; then
 	hosts="$1"
 else
-	hosts=$(awk -F "," '{print $1}' ~/.ssh/known_hosts | grep 'dev.agent.ru')
+	hosts=$(./known_hosts | grep -v 'vs-as')
 fi
-
 
 SCRIPT=$(cat virus)
 

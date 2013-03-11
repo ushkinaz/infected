@@ -1,0 +1,15 @@
+#!/bin/bash
+# Force update of SSH fingerprints
+
+if [[ "$1" != "" ]]; then
+	hosts="$1"
+else
+	hosts=$(./known_hosts | grep -v 'vs-as')
+fi
+
+for host in $hosts
+do
+	echo ==== $host
+	ssh-keygen -f "/home/dsidorenko/.ssh/known_hosts" -R $host
+	ssh $host 'hostname'
+done

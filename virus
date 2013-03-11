@@ -1,4 +1,6 @@
 #!/bin/bash
+# Workhorse. This script is executed on every to-be-infected host.
+
 if [[ ! -x $(which git) ]]; then
 	echo git not found, FAIL
 	exit
