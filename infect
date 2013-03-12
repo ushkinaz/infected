@@ -1,17 +1,30 @@
 #!/bin/bash
 # Infects given host with personalized settings.
-# infect with no arguments infects all hosts in .ssh/known_hosts.
+# infect with 'all' argument infects all hosts in .ssh/known_hosts.
 
-if [[ "$1" != "" ]]; then
+if [[ $# -lt 1 ]]; then
+  echo "Expecting at least host argument"
+  exit 1
+fi
+
+
+if [[ "$1" != "all" ]]; then
 	hosts="$1"
 else
 	hosts=$(./known_hosts | grep -v 'vs-as')
 fi
 
-SCRIPT=$(cat virus)
+if [[ "$2" != "" ]]; then
+	virus=$2
+else
+	virus='viruses/virus'
+fi
+
+SCRIPT=$(cat $virus)
 
 for host in $hosts
 do
-	echo "== infecting $host"
+	echo -e "== infecting \033[1m$host\033[0m"
 	ssh $host "$SCRIPT"
+	# >"logs/$host.log"
 done

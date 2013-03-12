@@ -1,4 +1,4 @@
 #!/bin/bash
 # known hosts, only on dev.agent.ru
 
-cut -d ',' -f 1 ~/.ssh/known_hosts | cut -d ' ' -f 1 | grep -v '|' | grep 'dev.agent.ru'
+cut -d ',' -f 1 ~/.ssh/known_hosts | cut -d ' ' -f 1 | grep -v '|' | grep 'dev.agent.ru' --color=NEVER

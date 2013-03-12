@@ -1,0 +1,7 @@
+role :hosts, "logger.dev.agent.ru", "appkrabby.d.dev.agent.ru"
+role :locations, "~/"
+
+
+task :search, :roles => :hosts do
+  run "whoami"
+end
