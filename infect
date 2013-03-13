@@ -2,29 +2,38 @@
 # Infects given host with personalized settings.
 # infect with 'all' argument infects all hosts in .ssh/known_hosts.
 
-if [[ $# -lt 1 ]]; then
-  echo "Expecting at least host argument"
-  exit 1
-fi
+BASE_PATH=$(dirname $0)
+source $BASE_PATH/lib/shflags
 
+DEFINE_string host 'all' "Hosts to infect" n
+DEFINE_string virus 'viruses/virus.sh' "Virus to run on" v
+DEFINE_boolean log '0' "Log output to file" l
 
-if [[ "$1" != "all" ]]; then
+FLAGS "$@" || exit $?
+
+if [[ "$FLAGS_host" != "all" ]]; then
 	hosts="$1"
 else
 	hosts=$(./known_hosts | grep -v 'vs-as')
 fi
 
-if [[ "$2" != "" ]]; then
-	virus=$2
-else
-	virus='viruses/virus'
-fi
-
-SCRIPT=$(cat $virus)
+SCRIPT=$(cat $FLAGS_virus)
 
 for host in $hosts
 do
-	echo -e "== infecting \033[1m$host\033[0m"
-	ssh $host "$SCRIPT"
-	# >"logs/$host.log"
+	TO_LOG_HOST=`printf %030s $host`
+	echo -en "== infecting \033[1m$TO_LOG_HOST\033[0m"
+
+	if [[ $FLAGS_log -eq 1 ]]; then
+		ssh -o 'PubkeyAuthentication=yes' -o 'PasswordAuthentication=no' $host "$SCRIPT" >"logs/$host.log"
+	else
+		ssh -o 'PubkeyAuthentication=yes' -o 'PasswordAuthentication=no' $host "$SCRIPT"
+	fi
+
+	if [[ $? -eq 0 ]]; then
+		echo -e " [\e[00;32mOK\e[00m]"
+	else
+		echo -e " [\e[00;31mFAIL\e[00m]"
+	fi
+	# cat "logs/$host.log"
 done
