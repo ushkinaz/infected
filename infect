@@ -10,6 +10,7 @@ DEFINE_string virus 'viruses/virus.sh' "Virus to run on" v
 DEFINE_boolean log '0' "Log output to file" l
 
 FLAGS "$@" || exit $?
+eval set -- "${FLAGS_ARGV}"
 
 if [[ "$FLAGS_host" != "all" ]]; then
 	hosts="$1"
