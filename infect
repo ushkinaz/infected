@@ -1,5 +1,5 @@
 #!/bin/bash
-# Infects given host with personalized settings.
+# Infects given host with given virus.
 # infect with 'all' argument infects all hosts in .ssh/known_hosts.
 
 BASE_PATH=$(dirname $0)

@@ -1,17 +1,14 @@
 #!/bin/bash
 # update settings for a host
-# update_all [host]
 
-if [[ "$1" != "" ]]; then
-	hosts="$1"
-else
-	hosts=$(./known_hosts)
-fi
+function update_repo {
+	if [[ -d $1 ]]; then
+		cd $1
+		git reset --hard HEAD
+		git clean -dff
+		git pull --ff-only
+	fi
+}
 
-
-for host in $hosts
-do
-	echo ==== $host
-	ssh $host "cd ~/.homesick/repos/castle/ && git reset --hard HEAD && git clean -dff && git pull --ff-only"
-	ssh $host "cd ~/.homesick/repos/castle-vim7/ && git reset --hard HEAD && git clean -dff && git pull --ff-only"
-done
+update_repo ~/.homesick/repos/castle/
+update_repo ~/.homesick/repos/castle-vim7/
