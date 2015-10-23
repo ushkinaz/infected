@@ -1,48 +1,32 @@
 #!/bin/bash
 # Workhorse. This script is executed on every to-be-infected host.
+# vim: set filetype=sh :
+
+function fetch_castle {
+	homeshick clone https://github.com/$1/$2 -q
+	homeshick pull $2 -q
+	homeshick link $2 -f -q
+}
 
 if [[ ! -x $(which git) ]]; then
 	echo git not found, FAIL
-	exit
+	exit 1
 fi
 
-
-if [ -d /u05/$(whoami) ]; then
- export NETWORK_HOME="/u05/$(whoami)"
+if [[ ! -d  $HOME/.homesick/repos/homeshick ]]; then
+	git clone https://github.com/andsens/homeshick $HOME/.homesick/repos/homeshick
 fi
 
-# Possible rvm install paths:
-# /usr/local/rvm/
-# $HOME/.rvm/
+source $HOME/.homesick/repos/homeshick/homeshick.sh
 
-if [[ -d $HOME/.rvm/bin ]]; then
- export rvm_path=$HOME/.rvm
-elif [[ -d /usr/local/rvm/  ]]; then
- export rvm_path=/usr/local/rvm/
-elif [[ -d $NETWORK_HOME/.rvm/bin ]]; then
- export rvm_path=$NETWORK_HOME/.rvm
+type -t homeshick || exit 1
+
+fetch_castle ushkinaz castle
+fetch_castle ushkinaz castle-vim7
+fetch_castle ushkinaz castle-zsh
+
+
+if [[ -d ~/.homeshick/repos/castle-zsh/home/.zprezto ]]; then
+	cd ~/.homeshick/repos/castle-zsh/home/.zprezto
+	git submodule update --recursive
 fi
-
-if [ ! -d $rvm_path/bin/ ]; then
-	curl -L https://get.rvm.io | bash -s stable --ruby --gems=homesick,cheat,github
-fi
-
-source $rvm_path/scripts/rvm
-rvm reload > /dev/null
-rvm cleanup all
-
-homesick clone https://github.com/ushkinaz/castle.git -q
-homesick pull castle -q
-homesick symlink castle -f -q
-
-homesick clone https://github.com/ushkinaz/castle-vim7.git -q
-homesick pull castle-vim7 -q
-homesick symlink castle-vim7 -f -q
-
-
-cd ~/.homesick/repos/castle/ && git reset --hard HEAD && git clean -dff && git pull --ff-only
-cd ~/.homesick/repos/castle-vim7/ && git reset --hard HEAD && git clean -dff && git pull --ff-only
-
-echo "+++Infected+++"
-
-# vim: set filetype=sh :
