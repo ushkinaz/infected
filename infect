@@ -13,7 +13,7 @@ FLAGS "$@" || exit $?
 eval set -- "${FLAGS_ARGV}"
 
 if [[ "$FLAGS_host" != "all" ]]; then
-	hosts="$1"
+	hosts="$FLAGS_host"
 else
 	hosts=$(./known_hosts | grep -v 'vs-as')
 fi
@@ -23,7 +23,7 @@ SCRIPT=$(cat $FLAGS_virus)
 for host in $hosts
 do
 	TO_LOG_HOST=`printf %030s $host`
-	echo -en "== infecting \033[1m$TO_LOG_HOST\033[0m"
+	echo -en "== infecting \033[1m$TO_LOG_HOST\033[0m \n"
 
 	if [[ $FLAGS_log -eq 1 ]]; then
 		ssh -o 'PubkeyAuthentication=yes' -o 'PasswordAuthentication=no' $host "$SCRIPT" >"logs/$host.log"
