@@ -24,9 +24,3 @@ type -t homeshick || exit 1
 fetch_castle ushkinaz castle
 fetch_castle ushkinaz castle-vim7
 fetch_castle ushkinaz castle-zsh
-
-
-if [[ -d ~/.homeshick/repos/castle-zsh/home/.zprezto ]]; then
-	cd ~/.homeshick/repos/castle-zsh/home/.zprezto
-	git submodule update --recursive
-fi
