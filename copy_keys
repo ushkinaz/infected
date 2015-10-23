@@ -4,12 +4,13 @@
 function init_host {
 	echo ==== $1
 	ssh-keygen -f "$HOME/.ssh/known_hosts" -R $1
-	ssh-copy-id $1 -i ~/.ssh/dsidorenko.pub
+	ssh-copy-id -i ~/.ssh/dsidorenko.pub $1
 }
-
-for ENV in d s e
+# d s e n l
+# 
+for ENV in d c s n l q
 do
-	for APP in abra gamayun krabby numel psyduck simurgh swinub watchdog yandexws zubat
+	for APP in kadabra abra gamayun krabby numel psyduck simurgh swinub zubat watchdog
 	do
 		init_host app$APP.$ENV.dev.agent.ru
 	done
